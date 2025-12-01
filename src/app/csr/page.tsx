@@ -3,7 +3,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Clock, Zap, WifiOff, Download } from "lucide-react";
-import Image from "next/image";
 
 export default function CSRPage() {
   const [products, setProducts] = useState([]);
@@ -101,7 +100,10 @@ export default function CSRPage() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-          <div className=" pr-2" ref={containerRef}>
+          <div
+            className="overflow-y-auto max-h-[600px] pr-2"
+            ref={containerRef}
+          >
             {loading ? (
               <div className="min-h-[400px] flex flex-col items-center justify-center">
                 <div className="relative">
@@ -124,14 +126,11 @@ export default function CSRPage() {
                     key={product.id}
                     className="group bg-gradient-to-br from-white to-gray-50 rounded-xl shadow-md overflow-hidden border border-gray-200 hover:border-red-400 hover:shadow-xl transition-all duration-300"
                   >
-                    <div className="h-48 overflow-hidden bg-gray-100 relative">
-                      <Image
+                    <div className="h-48 overflow-hidden bg-gray-100">
+                      <img
                         src={product.image}
                         alt={product.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-contain p-6 transition-transform duration-500 group-hover:scale-110"
-                        unoptimized // Since fakestoreapi doesn't support Next.js Image optimization
+                        className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
                     <div className="p-5">

@@ -1,6 +1,5 @@
 // app/ssg/page.js
 import { Clock, Zap, Shield, Database, TrendingUp } from "lucide-react";
-import Image from "next/image";
 
 async function getProducts() {
   const res = await fetch("https://fakestoreapi.com/products", {
@@ -63,7 +62,7 @@ export default async function SSGPage() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-          <div className="pr-2">
+          <div className="overflow-y-auto max-h-[600px] pr-2">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
               {products.map((product) => (
                 <div
@@ -74,14 +73,11 @@ export default async function SSGPage() {
                     <div className="absolute top-3 right-3 bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-sm">
                       CACHED
                     </div>
-                    <div className="h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50 relative">
-                      <Image
+                    <div className="h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50">
+                      <img
                         src={product.image}
                         alt={product.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-contain p-6 transition-transform duration-500 group-hover:scale-110"
-                        unoptimized
+                        className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-110"
                       />
                     </div>
                   </div>
