@@ -6,11 +6,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "i.dummyjson.com",
-        pathname: "/data/**",
+        hostname: "cdn.dummyjson.com",
+        pathname: "/product-images/**",
       },
     ],
   },
+
   typescript: {
     ignoreBuildErrors: true,
   },
