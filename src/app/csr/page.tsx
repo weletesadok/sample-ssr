@@ -1,3 +1,4 @@
+// app/csr/page.js
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -17,15 +18,13 @@ export default function CSRPage() {
 
     const fetchProducts = async () => {
       try {
-        const res = await fetch("https://dummyjson.com/products?limit=50", {
+        const res = await fetch("https://fakestoreapi.com/products", {
           cache: "no-store",
           signal: controller.signal,
         });
 
-        if (!res.ok) throw new Error("Failed to fetch products");
-
         const data = await res.json();
-        setProducts(data.products || []);
+        setProducts(data);
 
         // Simulate network performance metrics
         const endTime = performance.now();
@@ -130,12 +129,12 @@ export default function CSRPage() {
                   >
                     <div className="h-48 overflow-hidden bg-gray-100 relative">
                       <Image
-                        src={product.thumbnail}
+                        src={product.image}
                         alt={product.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-contain p-6 transition-transform duration-500 group-hover:scale-110"
-                        unoptimized
+                        unoptimized // Since fakestoreapi doesn't support Next.js Image optimization
                       />
                     </div>
                     <div className="p-5">
@@ -164,12 +163,6 @@ export default function CSRPage() {
                     </div>
                   </div>
                 ))}
-
-                {products.length === 0 && (
-                  <div className="col-span-full text-center py-10 text-gray-500">
-                    Failed to load products — please refresh.
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -192,8 +185,8 @@ export default function CSRPage() {
                     What Users Experience
                   </h3>
                   <p className="text-gray-600">
-                    Blank page → loading spinner → products appear after{" "}
-                    {loadTime}ms
+                    Initial blank page → Loading spinner → Products appear after{" "}
+                    {loadTime}ms delay
                   </p>
                 </div>
               </div>
@@ -206,7 +199,8 @@ export default function CSRPage() {
                     Time to Interactive
                   </h3>
                   <p className="text-gray-600">
-                    ~{loadTime + 100}ms (JS execution + fetch)
+                    ~{loadTime + 100}ms (includes JavaScript execution + data
+                    fetching)
                   </p>
                 </div>
               </div>
@@ -221,7 +215,8 @@ export default function CSRPage() {
                     Network Overhead
                   </h3>
                   <p className="text-gray-600">
-                    {networkData?.size || "0 KB"} downloaded for every visit
+                    {networkData?.size || "0 KB"} transferred for every user on
+                    every visit
                   </p>
                 </div>
               </div>
@@ -232,7 +227,7 @@ export default function CSRPage() {
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1">SEO Impact</h3>
                   <p className="text-gray-600">
-                    Search engines may see empty content before JS runs
+                    Search engines may see empty content during initial crawl
                   </p>
                 </div>
               </div>
