@@ -1,5 +1,5 @@
 "use client";
-
+import "client-only";
 import { useEffect, useState, useRef } from "react";
 import { Clock, Zap, WifiOff, Download } from "lucide-react";
 import Image from "next/image";
