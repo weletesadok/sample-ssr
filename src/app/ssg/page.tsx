@@ -2,18 +2,10 @@
 import { Clock, Shield, Database, TrendingUp } from "lucide-react";
 import Image from "next/image";
 
-async function getProducts() {
+export default async function SSGPage() {
   const res = await fetch("https://fakestoreapi.com/products", {});
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  return res.json();
-}
-
-export default async function SSGPage() {
-  const products = await getProducts();
+  const products = await res.json();
 
   const PerformanceMetrics = () => (
     <div className="mt-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl shadow-xl text-white p-8">
