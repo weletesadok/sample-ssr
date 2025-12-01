@@ -1,10 +1,9 @@
 // app/ssg/page.js
-import { Clock, Zap, Shield, Database, TrendingUp } from "lucide-react";
+import { Clock, Shield, Database, TrendingUp } from "lucide-react";
+import Image from "next/image";
 
 async function getProducts() {
-  const res = await fetch("https://fakestoreapi.com/products", {
-    next: { revalidate: 3600 },
-  });
+  const res = await fetch("https://fakestoreapi.com/products", {});
 
   if (!res.ok) {
     throw new Error("Failed to fetch products");
@@ -15,7 +14,6 @@ async function getProducts() {
 
 export default async function SSGPage() {
   const products = await getProducts();
-  const buildTime = new Date().toLocaleTimeString();
 
   const PerformanceMetrics = () => (
     <div className="mt-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl shadow-xl text-white p-8">
@@ -53,7 +51,7 @@ export default async function SSGPage() {
               <Shield size={24} />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Static Site Generation (SSG)
+              Server side rendering(SSR) and caching
             </h1>
           </div>
           <p className="text-gray-600 ml-12">
@@ -73,11 +71,14 @@ export default async function SSGPage() {
                     <div className="absolute top-3 right-3 bg-emerald-500 text-white px-3 py-1 rounded-lg text-xs font-bold z-10 shadow-sm">
                       CACHED
                     </div>
-                    <div className="h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50">
-                      <img
+                    <div className="h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50 relative">
+                      <Image
                         src={product.image}
                         alt={product.title}
-                        className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-110"
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-contain p-6 transition-transform duration-500 group-hover:scale-110"
+                        unoptimized
                       />
                     </div>
                   </div>
@@ -112,69 +113,6 @@ export default async function SSGPage() {
         </div>
 
         <PerformanceMetrics />
-
-        <div className="mt-8 bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            SSG Performance Benefits
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <Clock className="text-emerald-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
-                    What Users Experience
-                  </h3>
-                  <p className="text-gray-600">
-                    Products appear instantly - No loading spinner, no wait time
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <Database className="text-emerald-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
-                    Zero Network Overhead
-                  </h3>
-                  <p className="text-gray-600">
-                    HTML is fully formed - No API calls needed from user's
-                    browser
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <Shield className="text-emerald-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Perfect SEO</h3>
-                  <p className="text-gray-600">
-                    Search engines see complete content immediately
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <TrendingUp className="text-emerald-600" size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">
-                    Built at {buildTime}
-                  </h3>
-                  <p className="text-gray-600">
-                    Page generated once and served to millions instantly
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
