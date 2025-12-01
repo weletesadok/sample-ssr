@@ -1,12 +1,18 @@
-// app/ssg/page.js
 import { Clock, Shield, Database, TrendingUp } from "lucide-react";
 import Image from "next/image";
-
 export default async function SSGPage() {
-  const res = await fetch("https://fakestoreapi.com/products", {});
-
-  const products = await res.json();
-
+  let products = [];
+  try {
+    const res = await fetch("https://dummyjson.com/products?limit=50", {});
+    if (!res.ok) {
+      throw new Error(`API responded with ${res.status}`);
+    }
+    const data = await res.json();
+    products = data.products || [];
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    products = [];
+  }
   const PerformanceMetrics = () => (
     <div className="mt-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl shadow-xl text-white p-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -33,7 +39,6 @@ export default async function SSGPage() {
       </div>
     </div>
   );
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
@@ -43,14 +48,13 @@ export default async function SSGPage() {
               <Shield size={24} />
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Server side rendering(SSR) and caching
+              Static Site Generation (SSG) with Caching
             </h1>
           </div>
           <p className="text-gray-600 ml-12">
-            Products delivered instantly from cache - No API calls on page load
+            Products delivered instantly from cache — No API calls on page load
           </p>
         </div>
-
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
           <div className="overflow-y-auto max-h-[600px] pr-2">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
@@ -65,7 +69,7 @@ export default async function SSGPage() {
                     </div>
                     <div className="h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-emerald-50 relative">
                       <Image
-                        src={product.image}
+                        src={product.thumbnail}
                         alt={product.title}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -100,10 +104,14 @@ export default async function SSGPage() {
                   </div>
                 </div>
               ))}
+              {products.length === 0 && (
+                <div className="text-center col-span-full py-16 text-gray-500">
+                  Failed to load products — showing fallback.
+                </div>
+              )}
             </div>
           </div>
         </div>
-
         <PerformanceMetrics />
       </div>
     </div>
